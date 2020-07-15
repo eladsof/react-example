@@ -17,8 +17,6 @@ class NewsList extends Component {
         this.state = {
             articles:[]
         };
-
-
     }
 
     componentDidMount() {
@@ -62,10 +60,14 @@ class MyUser extends Component {
     }
 
      async componentDidMount() {
-
-         const user = await Auth.currentUserInfo()
-         console.log('Returned info: ', user)
-         this.setState({ user })
+        console.log(Object.keys( this.state.user).length)
+         if(Object.keys( this.state.user).length == 0) {
+            const user = await Auth.currentUserInfo()
+            console.log('Returned info: ', user)
+            this.setState({user})
+        } else {
+             console.log("user is not empty no need to fetch again")
+         }
      }
 
     render() {
