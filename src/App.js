@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
+import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
+
 
 var isAdmin = false;
 
@@ -44,8 +46,10 @@ function App() {
             <h1>News!!!</h1>
         </header>
         <NewsList/>
+        <AmplifySignOut/>
     </div>
   );
 }
 
-export default App;
+export default withAuthenticator(App);
+
