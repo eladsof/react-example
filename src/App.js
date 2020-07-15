@@ -13,6 +13,7 @@ class NewsList extends Component {
         ]
     }
 
+
     render() {
         return (
             <div>
