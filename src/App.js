@@ -1,24 +1,25 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+
+var articles = [
+    {'title':'title1','content':'text1'},
+    {'title':'title2','content':'text2'},
+    {'title':'title3','content':'text3'}]
+;
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React or maybe not....
-        </a>
+        <h1>News!!!</h1>
       </header>
+      <div>
+        {articles.map(value =>
+            <React.Fragment>
+              <h3>{value.title}</h3>
+              <h4>{value.content}</h4>
+            </React.Fragment>)}
+      </div>
     </div>
   );
 }
