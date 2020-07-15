@@ -1,40 +1,79 @@
 import React, {Component} from 'react';
 import './App.css';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
+import { API } from 'aws-amplify';
+import {listArticles} from "./graphql/queries";
+import {createArticle, deleteArticle} from "./graphql/mutations";
+import { Auth } from 'aws-amplify';
 
 
-var isAdmin = false;
+var isAdmin = true;
+
 
 class NewsList extends Component {
 
-    state = {
-        articles : [
-            {title:'title1',content:'text1'},
-            {title:'title2',content:'text2'},
-            {title:'title3',content:'text3'}
-        ]
+    constructor() {
+        super();
+        this.state = {
+            articles:[]
+        };
+
+
     }
 
+    componentDidMount() {
+        this.fetchAAA();
+    }
+
+    async fetchAAA() {
+        const apiData = await API.graphql({query:listArticles})
+        this.setState({articles: apiData.data.listArticles.items});
+        console.log(apiData.data.listArticles)
+    }
 
     render() {
         return (
             <div>
-                {this.state.articles.map(value =>
-                    <React.Fragment>
+                {this.state.articles.map((value) =>
+                    <React.Fragment key={value.id}>
                         <h3>{value.title}</h3>
                         <h4>{value.content}</h4>
-                        {isAdmin && <button onClick={() => this.removeArticle(value)}>Remove</button>}
+                        {isAdmin && <button onClick={() => this.removeArticle(value.id)}>Remove</button>}
                     </React.Fragment>)}
             </div>
         )
     }
 
-    removeArticle(value) {
-        let index = this.state.articles.indexOf(value)
-        console.log(value + "is in index" + index);
-        console.log(this.state.articles);
-        this.state.articles.splice(index,1);
-        this.setState(this.state.articles)
+    async  removeArticle(id) {
+        console.log("Trying to remove : " + id)
+        await API.graphql({ query: deleteArticle, variables: { input: { id } }});
+        this.fetchAAA()
+    }
+
+    async addArticle(title, content) {
+        await API.graphql({query:createArticle, variables : {input : {title,content}}})
+    }
+}
+
+class MyUser extends Component {
+
+    state = {
+        user: {}
+    }
+
+     async componentDidMount() {
+
+         const user = await Auth.currentUserInfo()
+         console.log('Returned info: ', user)
+         this.setState({ user })
+     }
+
+    render() {
+        return (
+            <b>
+            {this.state.user.username}
+            </b>
+        )
     }
 }
 
@@ -44,6 +83,7 @@ function App() {
     <div className="App">
         <header className="App-header">
             <h1>News!!!</h1>
+            <MyUser/>
         </header>
         <NewsList/>
         <AmplifySignOut/>
