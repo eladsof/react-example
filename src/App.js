@@ -12,6 +12,8 @@ var isAdmin = true;
 
 class NewsList extends Component {
 
+    //Hellloooo
+
     constructor() {
         super();
         this.state = {
